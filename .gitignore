@@ -1,4 +1,6 @@
 node_modules/
 .ops-state.json
+build-info.js
+public/
 
 .vercel

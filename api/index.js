@@ -1,9 +1,9 @@
 const { respond } = require("../app");
+const { BUILD_TIME } = require("../build-time");
 
-const VERSION = "1.2.0";
-const FAIL_AFTER_SEC = 0;
-const FAIL_HEALTH = true;
-const startedAt = Date.now();
+const VERSION = "1.3.0";
+const FAIL_AFTER_SEC = 60;
+const FAIL_HEALTH = false;
 
 module.exports = (req, res) => {
   const path = new URL(req.url, "http://localhost").pathname;
@@ -11,7 +11,7 @@ module.exports = (req, res) => {
     version: VERSION,
     failAfterSec: FAIL_AFTER_SEC,
     failHealth: FAIL_HEALTH,
-    startedAt,
+    startedAt: BUILD_TIME,
   });
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json");

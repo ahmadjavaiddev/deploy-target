@@ -1,9 +1,9 @@
 const { createServer } = require("node:http");
 const { NAME, respond } = require("./app");
 
-const VERSION = process.env.VERSION || "0.0.0";
-const FAIL_AFTER_SEC = Number(process.env.FAIL_AFTER_SEC || 0);
-const FAIL_HEALTH = process.env.FAIL_HEALTH === "1" || process.env.FAIL_HEALTH === "true";
+const VERSION = "1.0.0";
+const FAIL_AFTER_SEC = 0;
+const FAIL_HEALTH = false;
 const startedAt = Date.now();
 
 const server = createServer((req, res) => {

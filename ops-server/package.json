@@ -1,0 +1,10 @@
+{
+  "name": "deploy-target-ops-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tiny ops agent that runs on the VPS beside Docker and swaps the deploy-target container by tag.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

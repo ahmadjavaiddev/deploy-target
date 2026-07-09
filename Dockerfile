@@ -1,0 +1,12 @@
+FROM node:22-alpine
+
+ARG VERSION=0.0.0
+ARG FAIL_AFTER_SEC=0
+ENV VERSION=${VERSION}
+ENV FAIL_AFTER_SEC=${FAIL_AFTER_SEC}
+
+WORKDIR /app
+COPY package.json server.js ./
+
+EXPOSE 3000
+CMD ["node", "server.js"]

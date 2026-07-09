@@ -1,6 +1,6 @@
 const { respond } = require("../app");
 
-const VERSION = "1.0.0";
+const VERSION = "1.1.0";
 const FAIL_AFTER_SEC = 0;
 const FAIL_HEALTH = false;
 const startedAt = Date.now();

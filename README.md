@@ -18,19 +18,36 @@ the c-brain side) instead of a hardcoded local endpoint.
 
 ## The three-version matrix
 
-`server.js` reads `VERSION` and `FAIL_AFTER_SEC` from the environment and serves:
+`server.js` (container/VPS) and `api/index.js` (Vercel serverless) share the routing in `app.js`,
+reading `VERSION`, `FAIL_AFTER_SEC`, and `FAIL_HEALTH` from the environment and serving:
 
 - `GET /` → `{ name: "deploy-target", version }`
-- `GET /health` → `{ status: "healthy", version, uptimeSec }`, or once uptime passes
-  `FAIL_AFTER_SEC`, a 500 `{ status: "unhealthy", ... }` — a simulated bad build.
+- `GET /health` → `{ status: "healthy", version, uptimeSec }`, or a 500
+  `{ status: "unhealthy", ... }` when `FAIL_HEALTH` is set (unconditional) or once uptime passes
+  `FAIL_AFTER_SEC` — a bad build.
+
+`FAIL_HEALTH=1` fails every `/health` call unconditionally; `FAIL_AFTER_SEC=N` fails only after N
+seconds of uptime. On serverless (Vercel) uptime resets per invocation so `FAIL_AFTER_SEC` can't
+fire — the bad version there uses `FAIL_HEALTH=1`. `FAIL_AFTER_SEC` stays for container/VPS runs.
 
 Three images, built with `--build-arg VERSION=... FAIL_AFTER_SEC=...`:
 
-| tag    | VERSION | FAIL_AFTER_SEC | behavior                          |
-|--------|---------|----------------|-------------------------------------|
-| v1.0.0 | 1.0.0   | 0 (never)      | good                                 |
-| v1.1.0 | 1.1.0   | 0 (never)      | good                                 |
-| v1.2.0 | 1.2.0   | 20             | health 500s after 20s uptime (bad)  |
+| tag    | VERSION | knob             | behavior                             |
+|--------|---------|------------------|--------------------------------------|
+| v1.0.0 | 1.0.0   | none             | good                                 |
+| v1.1.0 | 1.1.0   | none             | good                                 |
+| v1.2.0 | 1.2.0   | FAIL_AFTER_SEC=20 (container) / FAIL_HEALTH=1 (serverless) | health 500s (bad) |
+
+## Vercel deployment shape
+
+The account is a Hobby ("northstar", limited) plan, so container/Dockerfile deployments aren't
+available — the service runs on Vercel's Node runtime with `server.js` auto-detected as the root
+entrypoint (`api/index.js` + `vercel.json` are a serverless-function fallback of the same `app.js`
+logic). Each version is a separate `vercel deploy` carrying `-m version=vX.Y.Z` meta and its
+`-e VERSION=... [-e FAIL_HEALTH=1]` env, so deploy-by-version is scriptable: find the deployment
+by its `version` meta tag and point the production alias (`deploy-target-lyart.vercel.app`) at it.
+Rollback re-points the alias at the previously-aliased deployment. This is exactly what c-brain's
+`OPS_BACKEND=vercel` driver does behind the same three ops tools.
 
 `.github/workflows/build-images.yml` builds and pushes all three to
 `ghcr.io/ahmadjavaiddev/deploy-target:{v1.0.0,v1.1.0,v1.2.0}` on every push to `main` (and on

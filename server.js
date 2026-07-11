@@ -2,19 +2,19 @@ const { createServer } = require("node:http");
 const { NAME, respond } = require("./app");
 const { BUILD_TIME } = require("./build-time");
 
-const VERSION = "1.3.0";
-const FAIL_AFTER_SEC = 60;
+const VERSION = "1.4.0";
+const FAIL_AFTER_SEC = 0;
 const FAIL_HEALTH = false;
 
 const server = createServer((req, res) => {
-  const { status, body } = respond(req.url, {
+  const { status, body, contentType } = respond(req.url, {
     version: VERSION,
     failAfterSec: FAIL_AFTER_SEC,
     failHealth: FAIL_HEALTH,
     startedAt: BUILD_TIME,
   });
-  res.writeHead(status, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(body));
+  res.writeHead(status, { "Content-Type": contentType ?? "application/json" });
+  res.end(contentType ? body : JSON.stringify(body));
 });
 
 server.listen(3000, () => {

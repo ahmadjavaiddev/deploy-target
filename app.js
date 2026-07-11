@@ -32,7 +32,7 @@ function respond(url, { version, failAfterSec, failHealth, startedAt }) {
         },
       };
     }
-    return { status: 200, body: { status: "healthy", version, uptimeSec } };
+    return { status: 200, body: { status: "healthy", message: "all good — serving traffic normally", version, uptimeSec } };
   }
 
   return { status: 404, body: { error: "not found" } };

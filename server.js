@@ -2,7 +2,7 @@ const { createServer } = require("node:http");
 const { NAME, respond } = require("./app");
 const { BUILD_TIME } = require("./build-time");
 
-const VERSION = "1.4.0";
+const VERSION = "1.4.1";
 const FAIL_AFTER_SEC = 0;
 const FAIL_HEALTH = false;
 

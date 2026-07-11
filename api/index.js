@@ -1,9 +1,9 @@
 const { respond } = require("../app");
 const { BUILD_TIME } = require("../build-time");
 
-const VERSION = "1.4.1";
+const VERSION = "1.4.2";
 const FAIL_AFTER_SEC = 0;
-const FAIL_HEALTH = false;
+const FAIL_HEALTH = true;
 
 module.exports = (req, res) => {
   const path = new URL(req.url, "http://localhost").pathname;

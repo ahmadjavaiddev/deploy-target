@@ -1,6 +1,6 @@
 {
   "name": "deploy-target",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "description": "Minimal HTTP service deployed by the c-brain pilot deploy-flow agent onto a real VPS.",
   "main": "server.js",

@@ -3,6 +3,16 @@ const NAME = "deploy-target";
 function respond(url, { version, failAfterSec, failHealth, startedAt }) {
   const uptimeSec = Math.floor((Date.now() - startedAt) / 1000);
 
+  if (url === "/home") {
+    const html = [
+      "<!doctype html><html><head><title>deploy-target</title></head><body>",
+      "<h1>deploy-target</h1>",
+      '<button style="background:#2563eb;color:#fff;border:0;padding:10px 18px;border-radius:6px">Check status</button>',
+      "</body></html>",
+    ].join("");
+    return { status: 200, body: html, contentType: "text/html" };
+  }
+
   if (url === "/") {
     return { status: 200, body: { name: NAME, version } };
   }
